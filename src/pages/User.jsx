@@ -11,6 +11,7 @@ function User() {
 
   useEffect(() => {
     getUser(login);
+    // eslint-disable-next-line
   }, []);
 
   const {
