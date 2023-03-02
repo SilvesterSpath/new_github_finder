@@ -10,6 +10,7 @@ export const GithubProvider = ({ children }) => {
   const initialState = {
     users: [],
     user: {},
+    repos: [],
     loading: false,
   };
 
@@ -55,7 +56,31 @@ export const GithubProvider = ({ children }) => {
     });
   };
 
-  // Get search results
+  // Get user repos
+  const getRepos = async (login) => {
+    setLoading();
+
+    const params = new URLSearchParams({
+      sort: 'created',
+      per_page: 10,
+    });
+
+    const res = await fetch(`${GITHUB_URL}/users/${login}/repos?${params}`, {
+      headers: {
+        Authorization: `token ${GITHUB_TOKEN}`,
+      },
+    });
+
+    // getting the repos array
+    const repos = await res.json();
+
+    dispatch({
+      type: 'GET_REPOS',
+      payload: repos,
+    });
+  };
+
+  // Get a single user
   const getUser = async (login) => {
     setLoading();
 
@@ -95,6 +120,7 @@ export const GithubProvider = ({ children }) => {
         searchUsers,
         resetUsers,
         getUser,
+        getRepos,
       }}
     >
       {children}
